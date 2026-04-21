@@ -66,12 +66,34 @@
       letter-spacing: 0.5px;
     }
 
+    .topbar-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 140px;
+      max-width: 28vw;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+      animation: breathe 3.6s ease-in-out infinite;
+      transform-origin: center;
+    }
+
     .clock {
       font-size: 28px;
       font-weight: 700;
-      color: #8ef0b2;
+      color: #ffffff;
       min-width: 250px;
       text-align: right;
+      text-shadow: 0 0 18px rgba(255,255,255,0.35);
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.06); filter: brightness(1.08); }
     }
 
     .grid {
@@ -216,7 +238,10 @@
   <div class="wrap">
     <div class="topbar">
       <div class="title">Система активності екрана</div>
-      <div class="clock" id="clock">--:--:--</div>
+      <div class="topbar-right">
+        <img class="brand-logo" src="static/images/FROP-logo_preview_01.jpg" alt="FROP logo" />
+        <div class="clock" id="clock">--:--:--</div>
+      </div>
     </div>
 
     <div class="grid">
