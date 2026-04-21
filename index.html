@@ -3,294 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anti Sleep Dashboard</title>
+  <title>FROP Clock</title>
   <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; }
 
     html, body {
-      margin: 0;
-      padding: 0;
       width: 100%;
       height: 100%;
       background: #05070a;
-      color: #eaf6ee;
       overflow: hidden;
+      font-family: Arial, sans-serif;
     }
 
-    body {
-      position: relative;
-    }
-
-    .bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(0,255,140,0.10), transparent 25%),
-        radial-gradient(circle at 80% 30%, rgba(0,170,255,0.10), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.05), transparent 30%),
-        linear-gradient(135deg, #05070a, #0b1118 45%, #08131a 100%);
-      animation: bgShift 12s ease-in-out infinite alternate;
-    }
-
-    @keyframes bgShift {
-      0%   { transform: scale(1) translate(0, 0); }
-      100% { transform: scale(1.04) translate(-8px, 6px); }
-    }
-
-    .wrap {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      padding: 28px;
-      gap: 20px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 20px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.30);
-    }
-
-    .title {
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    .hero-logo {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      animation: breathe 3.6s ease-in-out infinite;
+      transform-origin: center;
     }
 
     .clock {
-      font-size: 28px;
-      font-weight: 700;
-      color: #8ef0b2;
-      min-width: 250px;
-      text-align: right;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      min-height: 0;
-    }
-
-    .card {
-      position: relative;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.28);
-      overflow: hidden;
-      padding: 20px;
-    }
-
-    .card h3 {
-      margin: 0 0 14px;
-      font-size: 22px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .big {
-      font-size: 48px;
-      font-weight: 800;
-      color: #8ef0b2;
-      margin-top: 14px;
-    }
-
-    .sub {
-      margin-top: 8px;
-      font-size: 18px;
-      color: #cfe4d7;
-      opacity: 0.9;
-    }
-
-    .pulse-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #6dff9d;
-      box-shadow: 0 0 0 rgba(109,255,157,0.7);
-      animation: pulse 1.7s infinite;
-      margin-bottom: 14px;
-    }
-
-    @keyframes pulse {
-      0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(109,255,157,0.7); }
-      70%  { transform: scale(1.08); box-shadow: 0 0 0 18px rgba(109,255,157,0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(109,255,157,0); }
-    }
-
-    .bar-wrap {
-      margin-top: 18px;
-    }
-
-    .bar {
-      width: 100%;
-      height: 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.10);
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #55d98d, #6fd6ff);
-      transition: width 1.2s ease;
-    }
-
-    .activity-log {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-      font-size: 18px;
-    }
-
-    .log-item {
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.05);
-      color: #dcebe1;
-      transform: translateX(0);
-      transition: transform 0.4s ease, opacity 0.4s ease;
-    }
-
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.05);
-      font-size: 18px;
-      color: #d7e6dc;
-    }
-
-    .ticker {
-      white-space: nowrap;
-      overflow: hidden;
-      width: 60%;
-      position: relative;
-    }
-
-    .ticker-text {
-      display: inline-block;
-      padding-left: 100%;
-      animation: tickerMove 18s linear infinite;
-    }
-
-    @keyframes tickerMove {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-
-    .ghost-pointer {
       position: fixed;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.85);
-      box-shadow: 0 0 20px rgba(255,255,255,0.55);
-      z-index: 9999;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: left 1.5s ease, top 1.5s ease, opacity 0.5s ease;
-      opacity: 0.35;
+      top: 20px;
+      right: 24px;
+      z-index: 2;
+
+    color: #ffffff;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 16px rgba(255, 255, 255, 0.55);
+    }
+
+    @keyframes breathe {
+      0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+      50% {
+        transform: scale(1.06);
+        filter: brightness(1.08);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="ghost-pointer" id="ghostPointer"></div>
-
-  <div class="wrap">
-    <div class="topbar">
-      <div class="title">Система активності екрана</div>
-      <div class="clock" id="clock">--:--:--</div>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <div class="pulse-dot"></div>
-        <h3>Стан</h3>
-        <div class="big" id="statusText">АКТИВНО</div>
-        <div class="sub" id="lastAction">Очікування першої дії...</div>
-      </div>
-
-      <div class="card">
-        <h3>Лічильник активності</h3>
-        <div class="big" id="counter">0</div>
-        <div class="sub">Автоматичні дії для збивання таймера сну</div>
-
-        <div class="bar-wrap">
-          <div class="bar">
-            <div class="bar-fill" id="barFill"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Час роботи сторінки</h3>
-        <div class="big" id="uptime">00:00:00</div>
-        <div class="sub">Сторінка постійно генерує рух і взаємодію</div>
-      </div>
-
-      <div class="card">
-        <h3>Журнал подій</h3>
-        <div class="activity-log" id="activityLog">
-          <div class="log-item">Сторінку запущено</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Анімація</h3>
-        <div class="big" id="animValue">1</div>
-        <div class="sub">Значення постійно змінюється, щоб екран не був статичним</div>
-      </div>
-
-      <div class="card">
-        <h3>Порада</h3>
-        <div class="sub" style="font-size:22px; line-height:1.5;">
-          Залиш цю сторінку відкритою на весь екран у браузері Chromecast.
-          Вона постійно оновлює час, рух, анімацію, фокус і фонову активність.
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      <div>Режим: anti-sleep dashboard</div>
-      <div class="ticker">
-        <div class="ticker-text">
-          Активність сторінки • Оновлення часу • Віртуальний рух • Імітація взаємодії • Anti Sleep Mode •
-        </div>
-      </div>
-    </div>
-  </div>
+  <img class="hero-logo" src="static/images/FROP-logo_preview_01.jpg" alt="FROP logo" />
+  <div class="clock" id="clock">--:--:--</div>
 
   <script>
     const clockEl = document.getElementById('clock');
-    const uptimeEl = document.getElementById('uptime');
-    const counterEl = document.getElementById('counter');
-    const statusTextEl = document.getElementById('statusText');
-    const lastActionEl = document.getElementById('lastAction');
-    const logEl = document.getElementById('activityLog');
-    const animValueEl = document.getElementById('animValue');
-    const barFillEl = document.getElementById('barFill');
-    const ghostPointer = document.getElementById('ghostPointer');
-
-    let startTime = Date.now();
-    let counter = 0;
-    let animValue = 1;
 
     function pad(n) {
       return String(n).padStart(2, '0');
@@ -298,90 +61,11 @@
 
     function updateClock() {
       const now = new Date();
-      clockEl.textContent =
-        pad(now.getHours()) + ':' +
-        pad(now.getMinutes()) + ':' +
-        pad(now.getSeconds());
-    }
-
-    function updateUptime() {
-      const diff = Math.floor((Date.now() - startTime) / 1000);
-      const h = Math.floor(diff / 3600);
-      const m = Math.floor((diff % 3600) / 60);
-      const s = diff % 60;
-      uptimeEl.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
-    }
-
-    function addLog(text) {
-      const item = document.createElement('div');
-      item.className = 'log-item';
-      item.textContent = text;
-      logEl.prepend(item);
-
-      while (logEl.children.length > 5) {
-        logEl.removeChild(logEl.lastChild);
-      }
-    }
-
-    function fakeActivity() {
-      counter += 1;
-      counterEl.textContent = counter;
-      statusTextEl.textContent = 'АКТИВНО';
-      lastActionEl.textContent = 'Остання дія: ' + new Date().toLocaleTimeString('uk-UA');
-
-      const percent = (counter % 10) * 10;
-      barFillEl.style.width = percent + '%';
-
-      animValue += 1;
-      animValueEl.textContent = animValue;
-
-      document.title = 'Active ' + counter;
-
-      document.body.dispatchEvent(new MouseEvent('mousemove', {
-        bubbles: true,
-        cancelable: true,
-        clientX: Math.random() * window.innerWidth,
-        clientY: Math.random() * window.innerHeight
-      }));
-
-      document.body.dispatchEvent(new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        clientX: Math.random() * window.innerWidth,
-        clientY: Math.random() * window.innerHeight
-      }));
-
-      window.dispatchEvent(new Event('focus'));
-      window.dispatchEvent(new Event('resize'));
-
-      const x = 40 + Math.random() * (window.innerWidth - 80);
-      const y = 40 + Math.random() * (window.innerHeight - 80);
-      ghostPointer.style.left = x + 'px';
-      ghostPointer.style.top = y + 'px';
-      ghostPointer.style.opacity = 0.25 + Math.random() * 0.4;
-
-      addLog('Авто-активність #' + counter);
+      clockEl.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     }
 
     updateClock();
-    updateUptime();
     setInterval(updateClock, 1000);
-    setInterval(updateUptime, 1000);
-
-    setInterval(fakeActivity, 25000);
-
-    setInterval(() => {
-      document.body.style.transform =
-        `translate(${Math.random() * 0.6 - 0.3}px, ${Math.random() * 0.6 - 0.3}px)`;
-    }, 12000);
-
-    setInterval(() => {
-      if (document.hidden) {
-        location.reload();
-      }
-    }, 60000);
-
-    fakeActivity();
   </script>
 </body>
 </html>
